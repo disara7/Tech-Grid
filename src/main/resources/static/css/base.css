@@ -1,0 +1,20 @@
+/* External CSS */
+.bg-custom {
+    background-color: black;
+     /* Change this to your desired navbar color */
+}
+
+/* Top Bar Styles */
+.top-bar {
+    background-color: #333; /* Change this to your desired top bar color */
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+}
+
+.top-bar p {
+    margin: 0;
+    color: red;
+}
+
+/* Add more custom styles as needed */
