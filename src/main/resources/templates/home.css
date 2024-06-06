@@ -1,0 +1,35 @@
+.frameset {
+    background-color: black;
+}
+
+.categroies-card{
+    /* background-color: red; */
+    width: 50px;
+}
+
+/* styles.css */
+.custom-card {
+    
+    overflow: hidden; /* Ensure content stays within the square */
+}
+
+.custom-card img {
+    max-width: 30px;
+    height: 30px; /* Maintain aspect ratio */
+}
+
+.custom-card p {
+    margin: 0; /* Remove margin from paragraph */
+}
+
+/* styles.css */
+
+
+/* Additional styling to fit your design */
+.carousel-item.active img {
+    border: 5px solid #fff; /* example border for the active image */
+}
+
+section{
+    background-color: black;
+}
