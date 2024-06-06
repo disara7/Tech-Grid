@@ -18,3 +18,45 @@
 }
 
 /* Add more custom styles as needed */
+
+.logo{
+    margin: 1rem;
+}
+
+/* styles.css */
+.footer {
+    padding-top: 3rem;
+    padding-bottom: 2rem;
+    padding-left: 5rem;
+    padding-right: 5rem;
+    background-color: black; /* Bootstrap primary color */
+    color: white;
+    /* text-align: center; */
+    margin-top: 250px;
+    display: flex;
+    
+}
+
+.footer h1{
+    font-size: 2rem;
+}
+
+.footer h2{
+    font-size: 1.6rem;
+}
+
+.footer ul{
+    list-style: none;
+}
+
+.footer li{
+    padding-top: 1rem;
+}
+
+.footer p {
+    margin: 0; /* Remove margin from paragraph */
+}
+
+.footer-column{
+    width: 25%;
+}
