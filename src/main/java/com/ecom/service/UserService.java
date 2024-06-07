@@ -1,9 +1,13 @@
 package com.ecom.service;
 
+import java.util.List;
+
 import com.ecom.model.UserDtls;
 
 public interface UserService {
-
-	public UserDtls saveUser(UserDtls user);
+	UserDtls saveUser(UserDtls user);
+    List<UserDtls> getAllUsers();
+    UserDtls getUserById(Integer id);
+    void deleteUser(Integer id);
 
 }
