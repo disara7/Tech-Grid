@@ -60,3 +60,31 @@
 .footer-column{
     width: 25%;
 }
+
+/* .tag {
+    background-image: url('../static/img/Button.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 50px;  /* Adjust the width as needed */
+    /* height: 200px; /* Adjust the height as needed */
+    /* display:flex;
+    position: absolute; */
+/* }  */
+
+
+.tag {
+    background-color: aquamarine;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-weight: bold;
+    display: flex;
+    position: fixed; /* Changed to fixed to stick to the screen corner */
+    top: 70%; /* Center it vertically */
+    right: 0; /* Stick to the right edge */
+    transform: rotate(-90deg) translateY(-50%); /* Rotate and center */
+    transform-origin: center;
+    z-index: 1000; /* Ensure it stays above other elements */
+    margin-right: -5rem;
+}
