@@ -1,1 +1,3 @@
-# Tech-Grid
+# Tech Grid
+
+Your onestop electronics store
