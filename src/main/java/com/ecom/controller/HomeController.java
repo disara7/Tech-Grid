@@ -61,6 +61,11 @@ public class HomeController {
 		return "admin/index";
 	}
 
+	@GetMapping("/about")
+	public String about() {
+		return "about";
+	}
+
 	
 
 	@GetMapping("/products")
