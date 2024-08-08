@@ -56,6 +56,18 @@ public class HomeController {
 		return "register";
 	}
 
+	@GetMapping("/admin")
+	public String admin() {
+		return "admin/index";
+	}
+
+	@GetMapping("/about")
+	public String about() {
+		return "about";
+	}
+
+	
+
 	@GetMapping("/products")
 	public String products(Model m, @RequestParam(value = "category", defaultValue = "") String category) {
 		// System.out.println("category="+category);
