@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -33,5 +34,23 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Integer id) {
         UserRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<UserDtls> getUserById(String string) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getUserById'");
+    }
+
+    @Override
+    public Optional<UserDtls> getUserByUsername(String string) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getUserByUsername'");
+    }
+
+    @Override
+    public UserDtls createUser(UserDtls newUser) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'createUser'");
     }
 }
