@@ -139,7 +139,7 @@ public class ProductServiceImplTest {
 
         // Verify file operations
         File saveFile = new ClassPathResource("static/img/product_img").getFile();
-    Path path = Path.of(saveFile.getAbsolutePath(), "newImage.png");
+        Path path = Path.of(saveFile.getAbsolutePath(), "newImage.png");
 
         // Clean up test file
         Files.deleteIfExists(path);
