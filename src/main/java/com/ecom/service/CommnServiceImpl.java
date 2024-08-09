@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpSession;
 @Service
 public class CommnServiceImpl implements CommonService {
 
+	@SuppressWarnings("null")
 	@Override
 	public void removeSessionMessage() {
 		HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.getRequestAttributes()))

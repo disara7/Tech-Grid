@@ -56,6 +56,7 @@ public class AdminController {
 		return "admin/category";
 	}
 
+	@SuppressWarnings("null")
 	@PostMapping("/saveCategory")
 	public String saveCategory(@ModelAttribute Category category, @RequestParam("file") MultipartFile file,
 			HttpSession session) throws IOException {

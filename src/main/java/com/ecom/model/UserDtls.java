@@ -38,4 +38,14 @@ public class UserDtls {
 
 	private String profileImage;
 
+    public void setUsername(String string) {
+       
+        throw new UnsupportedOperationException("Unimplemented method 'setUsername'");
+    }
+
+    public Object getUsername() {
+     
+        throw new UnsupportedOperationException("Unimplemented method 'getUsername'");
+    }
+
 }

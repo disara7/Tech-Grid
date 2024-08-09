@@ -40,5 +40,10 @@ public class Product {
 	private Double discountPrice;
 	
 	private Boolean isActive;
+
+    public void setDiscount(double d) {
+      
+        throw new UnsupportedOperationException("Unimplemented method 'setDiscount'");
+    }
 	
 }
