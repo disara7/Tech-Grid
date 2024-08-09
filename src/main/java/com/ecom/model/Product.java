@@ -42,7 +42,7 @@ public class Product {
 	private Boolean isActive;
 
     public void setDiscount(double d) {
-        // TODO Auto-generated method stub
+      
         throw new UnsupportedOperationException("Unimplemented method 'setDiscount'");
     }
 	

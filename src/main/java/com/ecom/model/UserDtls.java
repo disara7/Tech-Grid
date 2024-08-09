@@ -39,12 +39,12 @@ public class UserDtls {
 	private String profileImage;
 
     public void setUsername(String string) {
-        // TODO Auto-generated method stub
+       
         throw new UnsupportedOperationException("Unimplemented method 'setUsername'");
     }
 
     public Object getUsername() {
-        // TODO Auto-generated method stub
+     
         throw new UnsupportedOperationException("Unimplemented method 'getUsername'");
     }
 

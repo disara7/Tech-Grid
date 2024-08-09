@@ -1,71 +1,74 @@
 package com.ecom.service;
+
 import com.ecom.model.UserDtls;
 import com.ecom.repository.UserRepository;
+import com.ecom.service.impl.UserServiceImpl;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
+
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
 public class UserServiceTest {
 
     @InjectMocks
-    private UserService userService;
+    private UserServiceImpl userService; // Use the implementation class here
 
     @Mock
     private UserRepository userRepository;
 
-    @Test
-    public void testGetUserByUsername() {
+    @BeforeEach
+    void setUp() {
         MockitoAnnotations.openMocks(this);
-
-        UserDtls user = new UserDtls();
-        user.setUsername("testuser");
-        when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(user));
-
-        Optional<UserDtls> foundUser = userService.getUserByUsername("testuser");
-
-        assertTrue(foundUser.isPresent());
-        assertTrue(foundUser.get().getUsername().equals("testuser"));
     }
 
-    //Test the scenario where a user with the given username does not exist
+    @Test
+    public void testGetUserByEmail() {
+        UserDtls user = new UserDtls();
+        user.setEmail("testuser@example.com");
+        when(userRepository.findByEmail("testuser@example.com")).thenReturn(Optional.of(user));
+
+        Optional<UserDtls> foundUser = userService.getUserByEmail("testuser@example.com");
+
+        System.out.println("testGetUserByEmail - Found User: " + foundUser);
+        if (foundUser.isPresent()) {
+            System.out.println("User Email: " + foundUser.get().getEmail());
+        }
+
+        assertTrue(foundUser.isPresent());
+        assertEquals("testuser@example.com", foundUser.get().getEmail());
+    }
 
     @Test
-    public void testGetUserByUsernameNotFound() {
-        MockitoAnnotations.openMocks(this);
+    public void testGetUserByEmailNotFound() {
+        when(userRepository.findByEmail("nonexistentuser@example.com")).thenReturn(Optional.empty());
 
-        when(userRepository.findByUsername("nonexistentuser")).thenReturn(Optional.empty());
+        Optional<UserDtls> foundUser = userService.getUserByEmail("nonexistentuser@example.com");
 
-        Optional<UserDtls> foundUser = userService.getUserByUsername("nonexistentuser");
+        System.out.println("testGetUserByEmailNotFound - Found User: " + foundUser);
 
         assertFalse(foundUser.isPresent());
     }
 
-    //Test the scenario where a new user is created successfully.
-
     @Test
     public void testCreateUser() {
-        MockitoAnnotations.openMocks(this);
-
         UserDtls newUser = new UserDtls();
-        newUser.setUsername("newuser");
+        newUser.setEmail("newuser@example.com");
         when(userRepository.save(any(UserDtls.class))).thenReturn(newUser);
 
         UserDtls createdUser = userService.createUser(newUser);
 
+        System.out.println("testCreateUser - Created User: " + createdUser);
+        System.out.println("Created User Email: " + createdUser.getEmail());
+
         assertNotNull(createdUser);
-        assertEquals("newuser", createdUser.getUsername());
+        assertEquals("newuser@example.com", createdUser.getEmail());
     }
-
-
 }

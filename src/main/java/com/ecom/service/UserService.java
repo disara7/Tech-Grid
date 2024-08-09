@@ -14,5 +14,6 @@ public interface UserService {
     Optional<UserDtls> getUserByUsername(String string);
     UserDtls getUserById(Integer id);
     UserDtls createUser(UserDtls newUser);
+    Optional<UserDtls> getUserByEmail(String string);
 
 }
