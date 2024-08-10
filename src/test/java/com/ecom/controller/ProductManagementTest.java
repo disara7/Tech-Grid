@@ -51,7 +51,7 @@ public class ProductManagementTest {
             // Verify Product Added
             WebElement addSuccessMessage = driver.findElement(By.id("addSuccessMessage"));
             assertTrue(addSuccessMessage.isDisplayed(), "Product add success message not displayed");
-            assertTrue(addSuccessMessage.getText().contains("Product added successfully"), "Product add success message does not contain expected text");
+            assertTrue(addSuccessMessage.getText().contains("Product added successfully"), "Message doesn't contain expected text");
 
             // View Product
             driver.get("http://localhost:8080/products");
@@ -86,7 +86,7 @@ public class ProductManagementTest {
             // Verify Product Edited
             WebElement editSuccessMessage = driver.findElement(By.id("editSuccessMessage"));
             assertTrue(editSuccessMessage.isDisplayed(), "Product edit success message not displayed");
-            assertTrue(editSuccessMessage.getText().contains("Product updated successfully"), "Product edit success message does not contain expected text");
+            assertTrue(editSuccessMessage.getText().contains("Product updated successfully"), "Message does not contain expected text");
 
             // Delete Product
             driver.get("http://localhost:8080/products");
@@ -100,7 +100,7 @@ public class ProductManagementTest {
             // Verify Product Deleted
             WebElement deleteSuccessMessage = driver.findElement(By.id("deleteSuccessMessage"));
             assertTrue(deleteSuccessMessage.isDisplayed(), "Product delete success message not displayed");
-            assertTrue(deleteSuccessMessage.getText().contains("Product deleted successfully"), "Product delete success message does not contain expected text");
+            assertTrue(deleteSuccessMessage.getText().contains("Product deleted successfully"), "Message does not contain expected text");
 
         } catch (Exception e) {
             // Log exception details for debugging
