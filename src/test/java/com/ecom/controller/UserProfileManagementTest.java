@@ -19,18 +19,15 @@ public class UserProfileManagementTest {
 
     @BeforeEach
     public void setUp() {
-        // Set path to chromedriver executable
+        
         System.setProperty("webdriver.chrome.driver", "D:/SOFTWARE/chromedriver-win64/chromedriver.exe");
 
-        // Initialize ChromeDriver with options
+        
         ChromeOptions options = new ChromeOptions();
-        // Uncomment if you want to run in headless mode
-        // options.addArguments("--headless");
         options.addArguments("--disable-gpu");
         options.addArguments("--no-sandbox");
 
         driver = new ChromeDriver(options);
-        // Set a timeout to wait for elements to be present
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
     }
 
@@ -53,7 +50,7 @@ public class UserProfileManagementTest {
             // Verify Registration Success
             WebElement registrationSuccessMessage = driver.findElement(By.id("registrationSuccessMessage"));
             assertTrue(registrationSuccessMessage.isDisplayed(), "Registration success message not displayed");
-            assertTrue(registrationSuccessMessage.getText().contains("Registration successful"), "Registration success message does not contain expected text");
+            assertTrue(registrationSuccessMessage.getText().contains("Registration successful"), "Message does not contain expected text");
 
             // Step 2: View User Profile
             driver.get("http://localhost:8080/profile");
@@ -81,7 +78,7 @@ public class UserProfileManagementTest {
             // Verify Profile Update Success
             WebElement updateSuccessMessage = driver.findElement(By.id("updateSuccessMessage"));
             assertTrue(updateSuccessMessage.isDisplayed(), "Profile update success message not displayed");
-            assertTrue(updateSuccessMessage.getText().contains("Profile updated successfully"), "Profile update success message does not contain expected text");
+            assertTrue(updateSuccessMessage.getText().contains("Profile updated successfully"), "Message does not contain expected text");
 
             // Re-check the updated profile information
             driver.get("http://localhost:8080/profile");
