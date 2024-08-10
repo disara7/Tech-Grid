@@ -51,13 +51,13 @@ public class ProductController {
 
     @PutMapping("/update")
     public ResponseEntity<Product> updateProduct(@RequestPart("product") Product product, 
-                                                  @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
+                                                  @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
         Product updatedProduct = productService.updateProduct(product, file);
         return ResponseEntity.ok(updatedProduct);
     }
 
     @GetMapping("/active")
-    public ResponseEntity<List<Product>> getAllActiveProducts(@RequestParam String category) {
+    public ResponseEntity<List<Product>> getAllActiveProducts(@RequestParam(value = "category", defaultValue = "") String category) {
         List<Product> products = productService.getAllActiveProducts(category);
         return ResponseEntity.ok(products);
     }
