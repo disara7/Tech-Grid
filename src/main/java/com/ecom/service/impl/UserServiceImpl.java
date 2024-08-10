@@ -44,10 +44,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Override
-    public Optional<UserDtls> getUserByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
+    
 
     @Override
     public UserDtls createUser(UserDtls newUser) {

@@ -131,9 +131,12 @@ public class AdminController {
         return "redirect:/admin/loadEditCategory/" + category.getId();
     }
 
-    @PostMapping("/saveProduct")
-    public String saveProduct(@ModelAttribute Product product, @RequestParam("file") MultipartFile image,
-                              HttpSession session) {
+    @PostMapping("/admin/adminProduct/save")
+public String saveProduct(Product product,
+                          @RequestParam("file") MultipartFile image,
+                          HttpSession session) {
+    // method implementation
+
         try {
             String imageName = image.isEmpty() ? "default.jpg" : image.getOriginalFilename();
             product.setImage(imageName);

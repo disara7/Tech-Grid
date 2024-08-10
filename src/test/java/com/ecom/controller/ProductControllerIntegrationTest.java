@@ -24,6 +24,8 @@ public class ProductControllerIntegrationTest {
         mockMvc.perform(get("/products"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.length()").value(2));
+            .andExpect(jsonPath("$.size()").value(2))
+            .andExpect(jsonPath("$[0].name").exists())
+            .andExpect(jsonPath("$[1].name").exists());
     }
 }

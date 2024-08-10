@@ -24,7 +24,6 @@ import com.ecom.model.Category;
 import com.ecom.model.Product;
 import com.ecom.model.UserDtls;
 import com.ecom.service.CategoryService;
-import com.ecom.service.ProductService;
 import com.ecom.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
@@ -32,84 +31,76 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class HomeController {
 
-	@Autowired
-	private CategoryService categoryService;
+    @Autowired
+    private CategoryService categoryService;
 
-	@Autowired
-	private ProductService productService;
+    @Autowired
+    private UserService userService;
 
-	@Autowired
-	private UserService userService;
+    @GetMapping("/")
+    public String index() {
+        return "index";
+    }
 
-	@GetMapping("/")
-	public String index() {
-		return "index";
-	}
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
 
-	@GetMapping("/login")
-	public String login() {
-		return "login";
-	}
+    @GetMapping("/register")
+    public String register() {
+        return "register";
+    }
 
-	@GetMapping("/register")
-	public String register() {
-		return "register";
-	}
+    @GetMapping("/admin")
+    public String admin() {
+        return "admin/index";
+    }
 
-	@GetMapping("/admin")
-	public String admin() {
-		return "admin/index";
-	}
+    @GetMapping("/about")
+    public String about() {
+        return "about";
+    }
 
-	@GetMapping("/about")
-	public String about() {
-		return "about";
-	}
+    @GetMapping("/products")
+    public String products(Model m, @RequestParam(value = "category", defaultValue = "") String category) {
+        // If products are handled in ProductController, remove this from HomeController
+        List<Category> categories = categoryService.getAllActiveCategory();
+        m.addAttribute("categories", categories);
+        m.addAttribute("paramValue", category);
+        return "product"; // Assuming this is for rendering a view
+    }
 
-	
+    @GetMapping("/product/{id}")
+    public String product(@PathVariable int id, Model m) {
+        // If product details are handled in ProductController, remove this from HomeController
+        
+        
+        return "view_product"; // Assuming this is for rendering a view
+    }
 
-	@GetMapping("/products")
-	public String products(Model m, @RequestParam(value = "category", defaultValue = "") String category) {
-		// System.out.println("category="+category);
-		List<Category> categories = categoryService.getAllActiveCategory();
-		List<Product> products = productService.getAllActiveProducts(category);
-		m.addAttribute("categories", categories);
-		m.addAttribute("products", products);
-		m.addAttribute("paramValue", category);
-		return "product";
-	}
+    @PostMapping("/saveUser")
+    public String saveUser(@ModelAttribute UserDtls user, @RequestParam("img") MultipartFile file, HttpSession session)
+            throws IOException {
 
-	@GetMapping("/product/{id}")
-	public String product(@PathVariable int id, Model m) {
-		Product productById = productService.getProductById(id);
-		m.addAttribute("product", productById);
-		return "view_product";
-	}
+        String imageName = file.isEmpty() ? "default.jpg" : file.getOriginalFilename();
+        user.setProfileImage(imageName);
+        UserDtls saveUser = userService.saveUser(user);
 
-	@PostMapping("/saveUser")
-	public String saveUser(@ModelAttribute UserDtls user, @RequestParam("img") MultipartFile file, HttpSession session)
-			throws IOException {
+        if (!ObjectUtils.isEmpty(saveUser)) {
+            if (!file.isEmpty()) {
+                File saveFile = new ClassPathResource("static/img").getFile();
 
-		String imageName = file.isEmpty() ? "default.jpg" : file.getOriginalFilename();
-		user.setProfileImage(imageName);
-		UserDtls saveUser = userService.saveUser(user);
+                Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "profile_img" + File.separator
+                        + file.getOriginalFilename());
 
-		if (!ObjectUtils.isEmpty(saveUser)) {
-			if (!file.isEmpty()) {
-				File saveFile = new ClassPathResource("static/img").getFile();
+                Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+            }
+            session.setAttribute("succMsg", "Register successfully");
+        } else {
+            session.setAttribute("errorMsg", "something wrong on server");
+        }
 
-				Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "profile_img" + File.separator
-						+ file.getOriginalFilename());
-
-				System.out.println(path);
-				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-			}
-			session.setAttribute("succMsg", "Register successfully");
-		} else {
-			session.setAttribute("errorMsg", "something wrong on server");
-		}
-
-		return "redirect:/register";
-	}
-
+        return "redirect:/register";
+    }
 }

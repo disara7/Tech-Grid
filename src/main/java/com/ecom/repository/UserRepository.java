@@ -11,7 +11,6 @@ public interface UserRepository extends JpaRepository<UserDtls, Integer> {
 
     Optional<UserDtls> findByEmail(String email);
 
-    Optional<UserDtls> findByUsername(String username);
 
     
 

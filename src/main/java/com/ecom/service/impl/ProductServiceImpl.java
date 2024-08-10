@@ -1,6 +1,7 @@
 package com.ecom.service.impl;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -8,7 +9,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,89 +21,88 @@ import com.ecom.service.ProductService;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-	@Autowired
-	private ProductRepository productRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
-	@Override
-	public Product saveProduct(Product product) {
-		return productRepository.save(product);
-	}
+    @Value("${upload.dir}")
+    private String uploadDir;
 
-	@Override
-	public List<Product> getAllProducts() {
-		return productRepository.findAll();
-	}
+    @Override
+    public Product saveProduct(Product product) {
+        return productRepository.save(product);
+    }
 
-	@Override
-	public Boolean deleteProduct(Integer id) {
-		Product product = productRepository.findById(id).orElse(null);
+    @Override
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
 
-		if (!ObjectUtils.isEmpty(product)) {
-			productRepository.delete(product);
-			return true;
-		}
-		return false;
-	}
+    @Override
+    public Boolean deleteProduct(Integer id) {
+        Product product = productRepository.findById(id).orElse(null);
 
-	@Override
-	public Product getProductById(Integer id) {
-		Product product = productRepository.findById(id).orElse(null);
-		return product;
-	}
+        if (!ObjectUtils.isEmpty(product)) {
+            productRepository.delete(product);
+            return true;
+        }
+        return false;
+    }
 
-	@Override
-	public Product updateProduct(Product product, MultipartFile image) {
+    @Override
+    public Product getProductById(Integer id) {
+        return productRepository.findById(id).orElse(null);
+    }
 
-		Product dbProduct = getProductById(product.getId());
+    @Override
+    public Product updateProduct(Product product, MultipartFile image) {
+        Product dbProduct = getProductById(product.getId());
 
-		String imageName = image.isEmpty() ? dbProduct.getImage() : image.getOriginalFilename();
+        if (dbProduct == null) {
+            return null; // Or handle as needed
+        }
 
-		dbProduct.setTitle(product.getTitle());
-		dbProduct.setDescription(product.getDescription());
-		dbProduct.setCategory(product.getCategory());
-		dbProduct.setPrice(product.getPrice());
-		dbProduct.setStock(product.getStock());
-		dbProduct.setImage(imageName);
-		dbProduct.setIsActive(product.getIsActive());
-		dbProduct.setDiscount(product.getDiscount());
+        String imageName = image.isEmpty() ? dbProduct.getImage() : image.getOriginalFilename();
 
-		// 5=100*(5/100); 100-5=95
-		Double disocunt = product.getPrice() * (product.getDiscount() / 100.0);
-		Double discountPrice = product.getPrice() - disocunt;
-		dbProduct.setDiscountPrice(discountPrice);
+        dbProduct.setTitle(product.getTitle());
+        dbProduct.setDescription(product.getDescription());
+        dbProduct.setCategory(product.getCategory());
+        dbProduct.setPrice(product.getPrice());
+        dbProduct.setStock(product.getStock());
+        dbProduct.setImage(imageName);
+        dbProduct.setIsActive(product.getIsActive());
+        dbProduct.setDiscount(product.getDiscount());
 
-		Product updateProduct = productRepository.save(dbProduct);
+        // Calculate discount price
+        double discount = product.getPrice() * (product.getDiscount() / 100.0);
+        double discountPrice = product.getPrice() - discount;
+        dbProduct.setDiscountPrice(discountPrice);
 
-		if (!ObjectUtils.isEmpty(updateProduct)) {
+        Product updatedProduct = productRepository.save(dbProduct);
 
-			if (!image.isEmpty()) {
+        if (updatedProduct != null && !image.isEmpty()) {
+            try {
+                // Ensure upload directory exists
+                File uploadDirectory = new File(uploadDir + File.separator + "product_img");
+                if (!uploadDirectory.exists()) {
+                    uploadDirectory.mkdirs();
+                }
 
-				try {
-					File saveFile = new ClassPathResource("static/img").getFile();
+                Path path = Paths.get(uploadDir + File.separator + "product_img" + File.separator + image.getOriginalFilename());
+                Files.copy(image.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                e.printStackTrace(); // Consider logging the error
+            }
+        }
 
-					Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "product_img" + File.separator
-							+ image.getOriginalFilename());
-					Files.copy(image.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+        return updatedProduct;
+    }
 
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			return product;
-		}
-		return null;
-	}
-
-	@Override
-	public List<Product> getAllActiveProducts(String category) {
-		List<Product> products = null;
-		if (ObjectUtils.isEmpty(category)) {
-			products = productRepository.findByIsActiveTrue();
-		}else {
-			products=productRepository.findByCategory(category);
-		}
-
-		return products;
-	}
-
+    @Override
+    public List<Product> getAllActiveProducts(String category) {
+        if (ObjectUtils.isEmpty(category)) {
+            return productRepository.findByIsActiveTrue();
+        } else {
+            return productRepository.findByCategoryAndIsActiveTrue(category);
+        }
+    }
 }
