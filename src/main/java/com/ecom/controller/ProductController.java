@@ -1,44 +1,64 @@
 package com.ecom.controller;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.http.ResponseEntity;
+import com.ecom.model.Product;
+import com.ecom.service.ProductService;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping("/api/products")
 public class ProductController {
 
-    @Value("${upload.dir}")
-    private String uploadDir;
+    @Autowired
+    private ProductService productService;
 
-    @PostMapping("/admin/saveProduct")
-    public String saveProduct(@RequestParam("title") String title,
-                              @RequestParam("description") String description,
-                              @RequestParam("category") String category,
-                              @RequestParam("price") double price,
-                              @RequestParam("isActive") boolean isActive,
-                              @RequestParam("stock") int stock,
-                              @RequestParam("file") MultipartFile file,
-                              RedirectAttributes redirectAttributes) {
-        // Handle the other form fields
+    @PostMapping("/save")
+    public ResponseEntity<Product> saveProduct(@RequestBody Product product) {
+        Product savedProduct = productService.saveProduct(product);
+        return ResponseEntity.ok(savedProduct);
+    }
 
-        // Save the uploaded file
-        if (!file.isEmpty()) {
-            try {
-                File saveFile = new File(uploadDir + file.getOriginalFilename());
-                file.transferTo(saveFile);
-                redirectAttributes.addFlashAttribute("succMsg", "Product saved successfully.");
-            } catch (IOException e) {
-                e.printStackTrace();
-                redirectAttributes.addFlashAttribute("errorMsg", "Failed to save the product.");
-            }
+    @GetMapping
+    public ResponseEntity<List<Product>> getAllProducts() {
+        List<Product> products = productService.getAllProducts();
+        return ResponseEntity.ok(products);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Integer id) {
+        boolean isDeleted = productService.deleteProduct(id);
+        if (isDeleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
         }
+    }
 
-        return "redirect:/admin/addProduct";
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable Integer id) {
+        Product product = productService.getProductById(id);
+        if (product != null) {
+            return ResponseEntity.ok(product);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<Product> updateProduct(@RequestPart("product") Product product, 
+                                                  @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
+        Product updatedProduct = productService.updateProduct(product, file);
+        return ResponseEntity.ok(updatedProduct);
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<List<Product>> getAllActiveProducts(@RequestParam String category) {
+        List<Product> products = productService.getAllActiveProducts(category);
+        return ResponseEntity.ok(products);
     }
 }

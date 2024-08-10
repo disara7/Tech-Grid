@@ -6,7 +6,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -22,19 +21,11 @@ public class ProductControllerIntegrationTest {
 
     @Test
     public void testGetProducts() throws Exception {
-        System.out.println("Starting testGetProducts()");
-
-        MvcResult result = mockMvc.perform(get("/products"))
+        mockMvc.perform(get("/products"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.length()").value(2))
-            .andReturn();
-
-        // Print the result to see the actual JSON response
-        System.out.println("Response Content: " + result.getResponse().getContentAsString());
-
-        // Optionally, print other details from the result if needed
-        System.out.println("Response Status: " + result.getResponse().getStatus());
-        System.out.println("Response Headers: " + result.getResponse().getHeaderNames());
+            .andExpect(jsonPath("$.size()").value(2))
+            .andExpect(jsonPath("$[0].name").exists())
+            .andExpect(jsonPath("$[1].name").exists());
     }
 }
