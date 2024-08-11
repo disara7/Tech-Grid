@@ -166,24 +166,28 @@ public class ProductServiceImplTest {
     }
 
     @Test
-    public void testGetAllActiveProductsWithCategory() {
-        // Given
-        Product product1 = new Product();
-        product1.setCategory("Electronics");
-        product1.setIsActive(true);
-        Product product2 = new Product();
-        product2.setCategory("Electronics");
-        product2.setIsActive(true);
-        List<Product> products = Arrays.asList(product1, product2);
+public void testGetAllActiveProductsWithCategory() {
+    // Given
+    Product product1 = new Product();
+    product1.setCategory("Electronics");
+    product1.setIsActive(true);
 
-        when(productRepository.findByCategory("Electronics")).thenReturn(products);
+    Product product2 = new Product();
+    product2.setCategory("Electronics");
+    product2.setIsActive(true);
 
-        // When
-        List<Product> result = productService.getAllActiveProducts("Electronics");
+    List<Product> products = Arrays.asList(product1, product2);
 
-        // Then
-        assertNotNull(result);
-        assertEquals(2, result.size());
-        verify(productRepository, times(1)).findByCategory("Electronics");
-    }
+    // Mock the repository call to return the active products when filtered by category
+    when(productRepository.findByCategoryAndIsActiveTrue("Electronics")).thenReturn(products);
+
+    // When
+    List<Product> result = productService.getAllActiveProducts("Electronics");
+
+    // Then
+    assertNotNull(result);
+    assertEquals(2, result.size());
+    verify(productRepository, times(1)).findByCategoryAndIsActiveTrue("Electronics");
+}
+
 }
