@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.ObjectUtils;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ecom.model.Product;

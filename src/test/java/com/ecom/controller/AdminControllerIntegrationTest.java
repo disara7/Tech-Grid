@@ -12,8 +12,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.mock.web.MockMultipartFile;
 
-import static org.mockito.Mockito.when;
-
 @WebMvcTest(AdminController.class)
 public class AdminControllerIntegrationTest {
 
