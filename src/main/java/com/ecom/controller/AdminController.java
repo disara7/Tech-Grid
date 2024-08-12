@@ -9,6 +9,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
@@ -26,16 +27,23 @@ import com.ecom.service.CategoryService;
 import com.ecom.service.ProductService;
 
 import jakarta.servlet.http.HttpSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+
+    private static final Logger log = LoggerFactory.getLogger(AdminController.class);
 
     @Autowired
     private CategoryService categoryService;
 
     @Autowired
     private ProductService productService;
+
+    @Value("${file.upload.dir}")
+    private String fileUploadDir;
 
     @GetMapping("/")
     public String index() {
@@ -78,6 +86,7 @@ public class AdminController {
             }
         } catch (IOException e) {
             session.setAttribute("errorMsg", "File upload failed: " + e.getMessage());
+            log.error("File upload failed", e);
         }
 
         return "redirect:/admin/category";
@@ -125,22 +134,21 @@ public class AdminController {
             }
         } catch (IOException e) {
             session.setAttribute("errorMsg", "File upload failed: " + e.getMessage());
+            log.error("File upload failed", e);
         }
 
         return "redirect:/admin/loadEditCategory/" + category.getId();
     }
 
-    @PostMapping("/admin/adminProduct/save")
-public String saveProduct(Product product,
-                          @RequestParam("file") MultipartFile image,
-                          HttpSession session) {
-    // method implementation
-
+    @PostMapping("/saveProduct/save")
+    public String saveProduct(Product product,
+                              @RequestParam("file") MultipartFile image,
+                              HttpSession session) {
         try {
             String imageName = image.isEmpty() ? "default.jpg" : image.getOriginalFilename();
             product.setImage(imageName);
-            product.setDiscount(0);
-            product.setDiscountPrice(product.getPrice());
+            product.setDiscount(0); // Default value for discount
+            product.setDiscountPrice(product.getPrice() - (product.getPrice() * product.getDiscount() / 100));
 
             Product savedProduct = productService.saveProduct(product);
 
@@ -154,6 +162,7 @@ public String saveProduct(Product product,
             }
         } catch (IOException e) {
             session.setAttribute("errorMsg", "File upload failed: " + e.getMessage());
+            log.error("File upload failed", e);
         }
 
         return "redirect:/admin/loadAddProduct";
@@ -199,13 +208,14 @@ public String saveProduct(Product product,
             }
         } catch (IOException e) {
             session.setAttribute("errorMsg", "File upload failed: " + e.getMessage());
+            log.error("File upload failed", e);
         }
 
         return "redirect:/admin/editProduct/" + product.getId();
     }
 
     private void saveFile(MultipartFile file, String folderName) throws IOException {
-        File saveFile = new File("src/main/resources/static/img/" + folderName);
+        File saveFile = new File(fileUploadDir + folderName);
         if (!saveFile.exists()) {
             saveFile.mkdirs();
         }
