@@ -50,7 +50,7 @@ public class ProductController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Product> updateProduct(@RequestPart("product") Product product, 
+    public ResponseEntity<Product> updateProduct(@RequestPart("product") Product product,
                                                   @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
         Product updatedProduct = productService.updateProduct(product, file);
         return ResponseEntity.ok(updatedProduct);

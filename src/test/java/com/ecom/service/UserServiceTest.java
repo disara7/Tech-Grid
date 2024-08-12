@@ -10,6 +10,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,11 +40,6 @@ public class UserServiceTest {
 
         Optional<UserDtls> foundUser = userService.getUserByEmail("testuser@example.com");
 
-        System.out.println("testGetUserByEmail - Found User: " + foundUser);
-        if (foundUser.isPresent()) {
-            System.out.println("User Email: " + foundUser.get().getEmail());
-        }
-
         assertTrue(foundUser.isPresent());
         assertEquals("testuser@example.com", foundUser.get().getEmail());
     }
@@ -51,8 +49,6 @@ public class UserServiceTest {
         when(userRepository.findByEmail("nonexistentuser@example.com")).thenReturn(Optional.empty());
 
         Optional<UserDtls> foundUser = userService.getUserByEmail("nonexistentuser@example.com");
-
-        System.out.println("testGetUserByEmailNotFound - Found User: " + foundUser);
 
         assertFalse(foundUser.isPresent());
     }
@@ -65,10 +61,61 @@ public class UserServiceTest {
 
         UserDtls createdUser = userService.createUser(newUser);
 
-        System.out.println("testCreateUser - Created User: " + createdUser);
-        System.out.println("Created User Email: " + createdUser.getEmail());
-
         assertNotNull(createdUser);
         assertEquals("newuser@example.com", createdUser.getEmail());
+    }
+
+    @Test
+    public void testGetAllUsers() {
+        UserDtls user1 = new UserDtls();
+        UserDtls user2 = new UserDtls();
+        List<UserDtls> users = Arrays.asList(user1, user2);
+
+        when(userRepository.findAll()).thenReturn(users);
+
+        List<UserDtls> userList = userService.getAllUsers();
+
+        assertNotNull(userList);
+        assertEquals(2, userList.size());
+    }
+
+    @Test
+    public void testGetAllUsersEmpty() {
+        when(userRepository.findAll()).thenReturn(Collections.emptyList());
+
+        List<UserDtls> userList = userService.getAllUsers();
+
+        assertNotNull(userList);
+        assertTrue(userList.isEmpty());
+    }
+
+    @Test
+    public void testDeleteUser() {
+        doNothing().when(userRepository).deleteById(1);
+
+        userService.deleteUser(1);
+
+        verify(userRepository, times(1)).deleteById(1);
+    }
+
+    @Test
+    public void testGetUserByIdInteger() {
+        UserDtls user = new UserDtls();
+        user.setId(1);
+        when(userRepository.findById(1)).thenReturn(Optional.of(user));
+
+        UserDtls foundUser = userService.getUserById(1);
+
+        assertNotNull(foundUser);
+        assertEquals(1, foundUser.getId());
+    }
+
+    @Test
+    public void testGetUserByIdIntegerNotFound() {
+        when(userRepository.findById(1)).thenReturn(Optional.empty());
+
+        UserDtls foundUser = userService.getUserById(1);
+
+        assertNull(foundUser);
     }
 }
