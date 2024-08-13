@@ -53,11 +53,11 @@ public class ProductControllerIntegrationTest {
 
     @Test
     public void testGetProductByIdNotFound() throws Exception {
-        // Perform a GET request to the /api/products/{id} endpoint with an invalid ID
+        
         ResultActions result = mockMvc.perform(get("/api/products/999")
                 .contentType(MediaType.APPLICATION_JSON));
 
-        // Verify the response status is 404 Not Found
+        
         result.andExpect(status().isNotFound());
     }
 }
