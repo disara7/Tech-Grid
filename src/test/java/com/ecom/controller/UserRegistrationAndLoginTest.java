@@ -24,7 +24,7 @@ public class UserRegistrationAndLoginTest {
         ChromeOptions options = new ChromeOptions();
         driver = new ChromeDriver(options);
 
-        // Set timeouts
+        
         driver.manage().timeouts().pageLoadTimeout(Duration.ofMinutes(2));
         driver.manage().timeouts().implicitlyWait(Duration.ofMinutes(1));
     }
